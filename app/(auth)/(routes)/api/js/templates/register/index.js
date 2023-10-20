@@ -1,6 +1,5 @@
 import { toast } from "react-hot-toast";
 import { API_SOCIAL_URL } from "../../../constants";
-import storage from "../../../storage/index"; // Import your storage library
 
 const action = "/auth/register";
 const method = "post";
