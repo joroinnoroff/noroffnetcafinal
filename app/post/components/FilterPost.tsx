@@ -8,13 +8,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Button } from '@/components/ui/button'
+ 
 import { SlidersHorizontal } from 'lucide-react'
-const FilterPost = ({ onFilterChange }) => {
-  const [filter, setFilter] = useState('Newest'); // Use useState to define 'filter'
-  const [showMedia, setShowMedia] = useState(false); // Use useState to define 'showMedia'
 
-  const handleFilterChange = (newFilter) => {
+interface FilterPostProps {
+  onFilterChange: (newFilter: string, showMedia: boolean) => void;
+}
+
+const FilterPost: React.FC<FilterPostProps> = ({ onFilterChange }: FilterPostProps) => {
+  const [filter, setFilter] = useState('Newest');
+  const [showMedia, setShowMedia] = useState(false);
+
+  const handleFilterChange = (newFilter: string) => {
     setFilter(newFilter);
     onFilterChange(newFilter, showMedia);
   };
@@ -28,7 +33,7 @@ const FilterPost = ({ onFilterChange }) => {
     <div className="p-2 cursor-pointer">
       <DropdownMenu>
         <DropdownMenuTrigger className="flex items-center hover:bg-gray-100 hover:text-black p-1 border rounded-sm dark:invert text-muted-foreground">
-          Filter
+          <DropdownMenuLabel>Filter</DropdownMenuLabel>
           <SlidersHorizontal width={15} height={15} />
         </DropdownMenuTrigger>
         <DropdownMenuContent>

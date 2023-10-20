@@ -24,7 +24,8 @@ const navLinks = [
   { title: "Kontakt", href: "/pages/contact" },
 ];
 const Navbar = () => {
-  const [user, setUser] = useState(null); 
+  const [user, setUser] = useState<{ name: string } | null>(null);
+
 
  
   useEffect(() => {
@@ -41,7 +42,7 @@ const Navbar = () => {
   }, []);
   const hasStoredUser = true;
   const linkUrl = hasStoredUser ? '/post' : '/';
-  const a = (userData) => {
+  const a = (userData: React.SetStateAction<null>) => {
     setUser(userData);  
     localStorage.setItem('profile', JSON.stringify(userData));
     localStorage.setItem('token', 'yourAuthTokenHere');
@@ -123,7 +124,7 @@ const Navbar = () => {
               <>
                 <div className="flex flex-col-reverse-end items-center text-sm">
                   <User />
-                  {user.name}
+                  {user && user.name ? user.name : 'User Name'}
                 </div>
                 <div>
                   <Button
@@ -232,14 +233,17 @@ const mobileLinkVars = {
     },
   },
 };
-const MobileNavLink = ({ title, href }) => {
+const MobileNavLink = ({ title, href }: { title: string; href: string }) => {
   return (
     <motion.div
       variants={mobileLinkVars}
-      className={`text-5xl uppercase ${currentPath === navLinks.toString.title ? 'text-gray-700' : 'text-black'}`}
+      className={`text-5xl uppercase ${
+        currentPath === title ? 'text-gray-700' : 'text-black'
+      }`}
     >
-      
-      <Link className="" href={href}>{title}</Link>
+      <Link className="" href={href}>
+        {title}
+      </Link>
     </motion.div>
   );
 };

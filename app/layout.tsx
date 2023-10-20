@@ -3,7 +3,7 @@ import './globals.css'
 import Navbar from './Header/Navbar'
 
  
-import { ThemeProvider } from '@/components/Theme-provider'
+import { ThemeProvider } from '@/components/theme-provider'
 import { ToasterProvider } from '@/components/ui/toast-provider'
 import Footer from '@/components/Footer'
 import Head from 'next/head'
@@ -18,6 +18,9 @@ export const metadata = {
  
   },
  
+}
+interface RootLayoutProps {
+  children: React.ReactNode; 
 }
 
 

@@ -18,7 +18,7 @@ const ContactPage = () => {
                   <input type="email" name='email' placeholder='Email' required className='border m-3 p-2 w-[330px] md:w-[400px]' pattern='^[\w\-.]+@(stud\.)?noroff\.no$' title='Email must Be Noroff affiliated'/>
                   </div>
 
-           <textarea name="" id="" cols="10" rows="5" className='resize-none w-full md:w-[400px] p-2 rounded-sm'
+           <textarea name="" id=""  className='resize-none w-full md:w-[400px] p-2 rounded-sm'
            placeholder='Skriv meldingen her...'>
 
            </textarea>
