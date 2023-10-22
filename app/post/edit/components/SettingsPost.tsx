@@ -20,7 +20,7 @@ interface Author {
 
 }
 interface Post {
-
+  id: String | null | undefined;
   author: Author;
   title: string;
   body: string;
@@ -38,9 +38,7 @@ const SettingsPost: React.FC<SettingsPostProps> = ({ post }) => {
   const router = useRouter();
 
   const handleEditPost = () => {
-    router.push(`/post/edit?id=${post.id}`, { post });
-    
-    console.log(post);
+    router.push(`/post/edit?id=${post.id}`);
   };
 
   return (

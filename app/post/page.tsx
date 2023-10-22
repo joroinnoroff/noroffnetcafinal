@@ -27,7 +27,7 @@
     body: string;
     media: string | null;
     created: string;
-    comments: Comment[];
+    comments: Comments[];
     tags: string[] | string;
     
   }
@@ -407,7 +407,7 @@
                     <div key={index} className="p-2 border flex flex-col-reverse rounded-sm ">
                       <p className='text-semibold text-1xl'>{comment.body}</p>
                       <div className='text-muted-foreground'>{new Date(selectedPost.created).toLocaleDateString()}</div>
-                      <Separator className="w-20"/>
+                      <Separator className="w-32"/>
                       <div
                       className='flex text-sm m-3'>
                         <User />
