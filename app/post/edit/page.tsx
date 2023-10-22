@@ -1,24 +1,21 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { updatePost } from '@/app/(auth)/(routes)/api/posts/update.js';
-import { useRouter } from 'next/navigation'; // Updated import
-import { getPost } from '@/app/(auth)/(routes)/api/posts/read';
+ 
+import { redirect, useRouter } from 'next/navigation'; 
+ 
 import toast from "react-hot-toast";
 import { Image, Trash } from 'lucide-react';
-import { API_SOCIAL_URL } from '../../(auth)/(routes)/api/constants'; // Import your API_SOCIAL_URL here
-import { authFetch } from '../../(auth)/(routes)/api/authFetch'; // Import your authFetch function here
-import { removePosts } from '@/app/(auth)/(routes)/api/posts/delete';
-import DeleteButton from './components/DeleteButton';
-import { redirect } from 'next/dist/server/api-utils';
-
+import { API_SOCIAL_URL } from '../../(auth)/(routes)/api/constants'; 
+import { authFetch } from '../../(auth)/(routes)/api/authFetch'; 
+ 
 
 
 
 
 const EditPage = () => {
   const [post, setPost] = useState({
-    id: '',
+    Id: '',
     title: '',
     body: '',
     tags: ["string"],
@@ -31,15 +28,16 @@ const EditPage = () => {
   useEffect(() => {
     const url = new URL(window.location.href);
     const id = url.searchParams.get('id');
-
+  
     if (id) {
       const getPostURL = `${API_SOCIAL_URL}/posts/${id}`;
-
+  
       authFetch(getPostURL)
         .then(async (response) => {
           if (response.ok) {
             const data = await response.json();
-            setPost(data);
+            // Set the post state, including the ID
+            setPost({ ...data, Id: id });
           } else {
             console.error('Error fetching post data:', response);
           }
@@ -47,6 +45,7 @@ const EditPage = () => {
         .catch((error) => console.error('Error fetching post data:', error));
     }
   }, []);
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -94,23 +93,21 @@ const EditPage = () => {
 
 
   const handleDelete = async () => {
-    if (!postId) {
-      throw new Error('Cannot delete post without a valid PostId');
-    }
-
+ 
+  
     try {
-      const deletePostURL = `https://nf-api.onrender.com/api/v1/social/posts/${postId}`;
+      const deletePostURL = `https://nf-api.onrender.com/api/v1/social/posts/${post.Id}`;
       const response = await authFetch(deletePostURL, {
         method: 'DELETE',
         headers: {
           'Accept': 'application/json',
-         
         },
       });
-
+  
       if (response.ok) {
         toast.success('Post deleted successfully');
-   
+        redirect("/post")
+        // You may want to navigate to a different page or perform some other action after a successful delete.
       } else {
         const errorData = await response.json();
         console.error('Error deleting post:', errorData);
@@ -121,6 +118,7 @@ const EditPage = () => {
       toast.error(`Error deleting post: ${error.message}`);
     }
   };
+  
 
 
   return (
