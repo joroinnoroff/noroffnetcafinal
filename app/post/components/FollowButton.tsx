@@ -45,7 +45,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({ profileName }) => {
             body: JSON.stringify({}),
           }
         );
-
+  
         if (response.status === 200) {
           setIsFollowing(false);
           toast.success(`Unfollowed ${profileName}`, {
@@ -61,18 +61,25 @@ const FollowButton: React.FC<FollowButtonProps> = ({ profileName }) => {
           {
             method: 'PUT',
             body: JSON.stringify({}),
-          }
+          } // Remove the semicolon here
         );
-
+  
         if (response.status === 200) {
           setIsFollowing(true);
           toast.success(`Følger ${profileName}`, {
             duration: 3000,
           });
-        } else if (response.status === 400 && response.data?.errors[0]?.message === "You are already following this profile") {
-          toast.success(`You are already following ${profileName}`, {
-            duration: 3000,
-          });
+        } else if (response.status === 400) {
+          // Handle the 400 status without trying to access response.data
+          const responseText = await response.text(); // Get the response text
+          if (responseText === "You are already following this profile") {
+            toast.success(`You are already following ${profileName}`, {
+              duration: 3000,
+            });
+          } else {
+            console.error('Error following the profile');
+            toast.error('Error following the profile');
+          }
         } else {
           console.error('Error following the profile');
           toast.error('Error following the profile');
@@ -83,6 +90,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({ profileName }) => {
       toast.error('Error handling follow/unfollow');
     }
   };
+  
 
   return (
   

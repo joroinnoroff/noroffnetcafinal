@@ -19,7 +19,7 @@ const NewPostPage = () => {
     tags: [''],
   });
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
     setPostData({
       ...postData,
@@ -27,7 +27,7 @@ const NewPostPage = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     try {
       const response = await createPost(postData);
@@ -107,12 +107,12 @@ const NewPostPage = () => {
 />
 
               </div>
-              <CardFooter className="flex-row gap-3 items-end justify-center mt-10">
+              <div className="flex-row gap-3 items-end justify-center mt-10">
                 <div className='flex items-center justify-center gap-3 '>
                   <Button className='transition-all' variant={"outline"}>Create Post +</Button>
                 </div>
                 <Button variant="default"><a href="/post">Cancel</a></Button>
-              </CardFooter>
+              </div>
             </div>
           </div>
         </form>

@@ -15,7 +15,6 @@ import SignInButton from "@/components/SignInButton";
 import { Button } from "@/components/ui/button";
  
 import toast from "react-hot-toast";
-const currentPath = window.location.pathname; 
 
 
 const navLinks = [
@@ -24,13 +23,12 @@ const navLinks = [
   { title: "Kontakt", href: "/pages/contact" },
 ];
 const Navbar = () => {
-  const [user, setUser] = useState<{ name: string } | null>(null);
+ const [user, setUser] = useState<{ name: string } | null>(null);
+  
 
-
- 
   useEffect(() => {
     const storedUser = localStorage.getItem('profile');
-
+  
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
@@ -40,13 +38,13 @@ const Navbar = () => {
       }
     }
   }, []);
-  const hasStoredUser = true;
-  const linkUrl = hasStoredUser ? '/post' : '/';
-  const a = (userData: React.SetStateAction<null>) => {
-    setUser(userData);  
-    localStorage.setItem('profile', JSON.stringify(userData));
-    localStorage.setItem('token', 'yourAuthTokenHere');
-  };
+  
+  const hasStoredUser = typeof localStorage !== 'undefined' && localStorage.getItem('profile');
+
+  
+  const linkUrl = hasStoredUser ? '/post' : '/';  
+  
+
 
 
   const handleLogout = () => {
@@ -147,6 +145,7 @@ const Navbar = () => {
             )}
         </div>
 
+        
         </div>
 
 
@@ -237,9 +236,7 @@ const MobileNavLink = ({ title, href }: { title: string; href: string }) => {
   return (
     <motion.div
       variants={mobileLinkVars}
-      className={`text-5xl uppercase ${
-        currentPath === title ? 'text-gray-700' : 'text-black'
-      }`}
+      className="text-5xl uppercase font-semibold"
     >
       <Link className="" href={href}>
         {title}

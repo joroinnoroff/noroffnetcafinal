@@ -11,6 +11,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+interface Author {
+  name: string,
+  email: string,
+  avatar: string,
+  banner: string
+
+}
 interface Post {
 
   author: Author;
@@ -18,7 +26,7 @@ interface Post {
   body: string;
   media: string | null;
   created: string;
-  comments: Comments[];
+  comments: Comment[];
   tags: string[] | string;
   
 }

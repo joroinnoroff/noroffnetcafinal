@@ -15,6 +15,7 @@ const SearchPosts: React.FC<SearchPostsProps> = ({ onSearchQueryChange }) => {
     <div className='hidden lg:flex'>
       <input
         type="text"
+        id='Search'
         placeholder='Søk etter Poster'
         className='p-2 rounded-sm border'
         onChange={handleInputChange}
