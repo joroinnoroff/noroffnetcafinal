@@ -1,12 +1,10 @@
 "use client"
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation'; // Import useRouter conditionally
+import { useRouter } from 'next/navigation'; 
 import { createPost } from '../../(auth)/(routes)/api/posts/create';
 
-import {
-  CardFooter,
-} from "@/components/ui/card";
+
 import { Image } from 'lucide-react';
 
 const NewPostPage = () => {
@@ -95,23 +93,23 @@ const NewPostPage = () => {
               />
             </div>
 
-            <div className='text-center mt-4 flex flex-col dark:invert'>
-              <div className='flex flex-col gap-2 '>
-                <label>Tags</label>
+            <div className='text-center mt-4 flex flex-col'>
+              <div className='flex flex-col gap-2 dark:invert '>
+                <label className='dark:invert'>Tags</label>
                 <input
   type="text"
   name="tags"
-  className='border'
+  className='border dark:invert'
   value={postData.tags.join(',')} 
   onChange={handleInputChange}
 />
 
               </div>
-              <div className="flex-row gap-3 items-end justify-center mt-10">
-                <div className='flex items-center justify-center gap-3 '>
-                  <Button className='transition-all' variant={"outline"}>Create Post +</Button>
+              <div className="flex-row gap-3 items-end justify-center mt-10 dark:invert">
+                <div className='flex flex-row items-center justify-center gap-3 '>
+                <Button id='submit' className='transition-all' variant={"outline"}>Create Post +</Button>
+                <Button variant="ghost" className='dark:invert'>Cancel</Button>
                 </div>
-                <Button variant="default"><a href="/post">Cancel</a></Button>
               </div>
             </div>
           </div>

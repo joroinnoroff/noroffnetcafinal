@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import { Button } from '@/components/ui/button';
  
 import { redirect, useRouter } from 'next/navigation'; 
@@ -36,7 +36,7 @@ const EditPage = () => {
         .then(async (response) => {
           if (response.ok) {
             const data = await response.json();
-            // Set the post state, including the ID
+           
             setPost({ ...data, Id: id });
           } else {
             console.error('Error fetching post data:', response);
@@ -47,22 +47,23 @@ const EditPage = () => {
   }, []);
   
 
-  const handleChange = (e) => {
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setPost((prevPost) => ({
       ...prevPost,
-      [name]: name === 'tags' ? value.split(',') : value,
+      [name]: value,
     }));
   };
 
-  const updatePost = async (postData) => {
+  const updatePost = async (postData: { Id?: string; title?: string; body?: string; tags?: string[]; media?: string; id?: any; }) => {
     if (!postData.id) {
       throw new Error("Update requires a PostId");
     }
 
     const updatePostURL = `${API_SOCIAL_URL}/posts/${postData.id}`;
     const response = await authFetch(updatePostURL, {
-      method: 'PUT', // Adjust this method if needed
+      method: 'PUT', 
       body: JSON.stringify(postData),
     });
 
@@ -72,24 +73,23 @@ const EditPage = () => {
       const updatedPostData = await response.json();
       setPost(updatedPostData);
       toast.success('Changes Saved');
-      router.push('/post'); // Redirect using router.push('/post')
+      router.push('/post'); 
     } else {
       console.error('Error updating post: Response from the server is not as expected.');
       toast.error('Error updating post: Response from the server is not as expected.');
     } 
   };
 
-  const handleSaveChanges = async (e) => {
+  const handleSaveChanges = async (e: React.MouseEvent) => {
     e.preventDefault();
-
-    // Call the updatePost function
     try {
       await updatePost(post);
     } catch (error) {
       console.error('Error updating post:', error);
-      toast.error(`Error updating post: ${error.message}`);
+      toast.error(`Error updating post: ${error}`);
     }
   };
+  
 
 
   const handleDelete = async () => {
@@ -107,7 +107,7 @@ const EditPage = () => {
       if (response.ok) {
         toast.success('Post deleted successfully');
         redirect("/post")
-        // You may want to navigate to a different page or perform some other action after a successful delete.
+       
       } else {
         const errorData = await response.json();
         console.error('Error deleting post:', errorData);
@@ -190,7 +190,7 @@ const EditPage = () => {
   type="text"
   name="tags"
   className='border'
-  value={post.tags.join(',')} // Join tags into a comma-separated string
+  value={post.tags.join(',')} 
   onChange={handleChange}
 />
             </div>

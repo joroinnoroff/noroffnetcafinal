@@ -17,20 +17,24 @@
   import toast from 'react-hot-toast';
   import SearchPosts from './components/SearchPosts';
   import FollowButton from './components/FollowButton';
+import Link from 'next/link';
+import { Url } from 'url';
   
   
   interface Post {
   
-    id: String | null | undefined;
+    id: String;
     author: Author;
     title: string;
     body: string;
-    media: string | null;
+    media: Url;
     created: string;
     comments: Comments[];
+    reactions: Reaction[]; 
     tags: string[] | string;
     
   }
+  
 
 
   interface Author {
@@ -49,6 +53,11 @@
     owner: string,
     created: number,
     author: Author,
+  }
+  interface Reaction {
+    userId: number; 
+    postId: number;
+  
   }
 
 
@@ -228,13 +237,21 @@
       return <div>Error: {error}</div>;
     }
 
-    const openPostModal = (post: Post | React.SetStateAction<null>) => {
+    const openPostModal = (post: Post) => {
       setSelectedPost(post);
     };
+    
 
     const closePostModal = () => {
       setSelectedPost(null);
     };
+
+    posts.forEach((post) => {
+      likeCounts[post.id] = post.reactions.length;
+    });
+    const sortedPosts = [...posts].sort((a, b) => {
+      return (likeCounts[b.id] || 0) - (likeCounts[a.id] || 0);
+    });
     const handleLikePost = async (postId: any) => {
       try {
 
@@ -273,9 +290,11 @@
     
     return (
       <div className="container mt-[10rem]">
-      <Button className="hover:m-2 transition-all">
-        Lag En Post+
-      </Button>
+      <Link href="/post/create/">
+        <Button  className="hover:m-2 transition-all">
+          Lag En Post+
+        </Button>
+      </Link>
       <h1 className="text-muted-foreground text-2xl p-1">Nye Poster</h1>
       <div className="flex items-center mb-2">
       <div className='flex items-center justify-center gap-3'>
@@ -322,7 +341,7 @@
                 <div className='flex items-end justify-center gap-2 mt-3'>
                   <div className='flex dark:invert'>
                     <button className='' onClick={() => handleLikePost(post.id)}>
-                      <Heart size={22} className="mt-3 dark:text-white " color='#000' />  {likeCounts[post.id] || 0}
+                      <Heart size={22} className="mt-3 dark:text-white " color='#000' />  <div>{likeCounts[post.id] || 0}</div>
                     </button>
                   </div>
                   <div className='flex flex-col items-center justify-center '>
@@ -364,9 +383,9 @@
 
     
 
-        <div>
+        <div className='animation'>
           {selectedPost && (
-            <PostModal post={selectedPost} isOpen={true} onClose={closePostModal}>
+            <PostModal post={selectedPost} isOpen={true} onClose={closePostModal} >
               
               <div className='absolute left-0 top-0 p-3 dark:invert'>
                 <div className='flex flex-col'>
@@ -379,7 +398,7 @@
               </div>
               <div className='flex flex-col mt-6 items-center justify-center'>
               {selectedPost.media ? (
-    <img src={selectedPost.media} alt={selectedPost.title} className="w-full md:w-[700px] h-75 object-cover rounded-sm" />
+    <img src={selectedPost.media} alt={selectedPost.media} className="w-full md:w-[800px] h-75 object-cover rounded-sm" />
   ) : (
     <div className="flex items-center justify-center">
       <NoImage />

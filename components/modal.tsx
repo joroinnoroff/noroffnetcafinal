@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, ReactNode, useState } from "react";
+import React, { useCallback, useRef, ReactNode, useState, PropsWithChildren } from "react";
 import { Send, X } from "lucide-react";
 import toast from "react-hot-toast";
 import {authFetch} from '../app/(auth)/(routes)/api/authFetch'
@@ -37,6 +37,7 @@ interface Post {
 
 
 interface PostModalProps {
+  children: PropsWithChildren
   post: Post;
   isOpen: boolean;
   onClose: () => void;
@@ -103,7 +104,7 @@ export default function Modal({ children, isOpen, onClose, post, onCommentSubmit
         <button type="button" onClick={onClose} className="absolute top-0 right-8 text-white">
           <X size={32} color="white" />
         </button>
-        <div ref={wrapper} className="flex justify-start items-center flex-col absolute h-[95%] md:w-[768px] md:mx-auto md:left-0 md:right-0 w-full bottom-0 bg-white rounded-t-3xl lg:px-40 px-8 pt-14 pb-72 overflow-auto">
+        <div ref={wrapper} className="flex justify-start items-center flex-col absolute h-[95%] md:w-[936px] md:mx-auto md:left-0 md:right-0 w-full bottom-0 bg-white rounded-t-3xl lg:px-40 px-8 pt-14 pb-72 overflow-auto">
           {children}
   
           
