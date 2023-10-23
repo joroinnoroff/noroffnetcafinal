@@ -1,7 +1,7 @@
 "use client"
 import React from 'react';
 import { Settings } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 
 import {
   DropdownMenu,
@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import toast from 'react-hot-toast';
 
 interface Author {
   name: string,
@@ -20,7 +21,7 @@ interface Author {
 
 }
 interface Post {
-  id: String | null | undefined;
+  id: string;
   author: Author;
   title: string;
   body: string;
@@ -31,15 +32,25 @@ interface Post {
   
 }
 interface SettingsPostProps {
-  post: Post; 
+  post: any; 
 }
 
 const SettingsPost: React.FC<SettingsPostProps> = ({ post }) => {
   const router = useRouter();
 
-  const handleEditPost = () => {
+ const handleEditPost = () => {
+  if (isPost(post)) {
     router.push(`/post/edit?id=${post.id}`);
-  };
+  } else {
+    toast.error("No Post to Edit");
+    redirect("/post");
+  }
+};
+
+function isPost(obj: any): obj is Post {
+  return 'id' in obj;
+}
+  
 
   return (
     <DropdownMenu>

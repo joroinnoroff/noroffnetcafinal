@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import {authFetch} from '../app/(auth)/(routes)/api/authFetch'
 import { Button } from "./ui/button";
 interface Post {
-    id: string;
+    id: number;
     author: Author;
     title: string;
     body: string;
@@ -35,14 +35,13 @@ interface Post {
 
  
 
-
-interface PostModalProps {
-  children: PropsWithChildren
-  post: Post;
-  isOpen: boolean;
-  onClose: () => void;
-  onCommentSubmit: () => void; 
-}
+  interface PostModalProps {
+    children: ReactNode;
+    post: Post;
+    isOpen: boolean;
+    onClose: () => void;
+    onCommentSubmit: () => void;
+  }
 
 export default function Modal({ children, isOpen, onClose, post, onCommentSubmit }: PostModalProps) {
     const [commentText, setCommentText] = useState(""); 
@@ -81,7 +80,7 @@ export default function Modal({ children, isOpen, onClose, post, onCommentSubmit
               body: commentText,
               replyToId: '',
               id: Date.now(),
-              postId: post.id,
+              postId: post.id.toString(),
               owner: '', 
               created: Date.now(),
               author: post.author,

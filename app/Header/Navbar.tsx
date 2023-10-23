@@ -15,6 +15,7 @@ import SignInButton from "@/components/SignInButton";
 import { Button } from "@/components/ui/button";
  
 import toast from "react-hot-toast";
+import { load } from "../(auth)/(routes)/api/storage";
 
 
 const navLinks = [
@@ -23,28 +24,17 @@ const navLinks = [
   { title: "Kontakt", href: "/pages/contact" },
 ];
 const Navbar = () => {
- const [user, setUser] = useState<{ name: string } | null>(null);
-  
-
+  const [user, setUser] = useState<{ name: string } | null>(null);
   useEffect(() => {
-    const storedUser = localStorage.getItem('profile');
-  
+    const storedUser = load('profile'); 
+    
     if (storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser);
-      } catch (error) {
-        console.error('Error parsing user from local storage:', error);
-      }
+      setUser(storedUser);
     }
   }, []);
+  const linkUrl = user ? '/post' : '/';
   
-  const hasStoredUser = typeof localStorage !== 'undefined' && localStorage.getItem('profile');
-
-  
-  const linkUrl = hasStoredUser ? '/post' : '/';  
-  
-
+ 
 
 
   const handleLogout = () => {
@@ -106,13 +96,13 @@ const Navbar = () => {
       <nav className="flex justify-between items-center py-8 lg:py-4 px-2">
         <div className="flex items-center gap-2 md:gap-4">
           <div className="w-5 h-5 bg-yellow-400 rounded-full p-10 flex" />
-          <a href={linkUrl}>
+          <Link hrefLang="Home" href={linkUrl}>
           <span className="text-sm font-semibold tracking-widest uppercase flex items-center">
  
   <Image src={NorOffLogo} alt="Logo" width={50} height={50} className="absolute left-6 right-0 dark:invert" />
  </span>
 
-          </a>
+          </Link>
 
      
           <div className="flex place-items-end">   <ModeToggle  /></div>

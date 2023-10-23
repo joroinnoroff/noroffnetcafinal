@@ -14,7 +14,7 @@ const NewPostPage = () => {
     title: '',
     body: '',
     media: '',
-    tags: [''],
+    tags: [],
   });
 
   const handleInputChange = (e: { target: { name: any; value: any; }; }) => {

@@ -16,10 +16,10 @@ import { authFetch } from '../../(auth)/(routes)/api/authFetch';
 const EditPage = () => {
   const [post, setPost] = useState({
     Id: '',
-    title: '',
-    body: '',
-    tags: ["string"],
-    media: 'url',
+  title: '',
+  body: '',
+  tags: [], // Initialize tags as an empty array
+  media: 'url',
   });
 
   const router = useRouter();
@@ -52,6 +52,14 @@ const EditPage = () => {
     const { name, value } = e.target;
     setPost((prevPost) => ({
       ...prevPost,
+      [name]: name === 'tags' ? value.split(',') : value,
+    }));
+  };
+
+  const handleChangeTextarea = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setPost((prevPost) => ({
+      ...prevPost,
       [name]: value,
     }));
   };
@@ -80,15 +88,17 @@ const EditPage = () => {
     } 
   };
 
-  const handleSaveChanges = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    try {
-      await updatePost(post);
-    } catch (error) {
-      console.error('Error updating post:', error);
-      toast.error(`Error updating post: ${error}`);
-    }
-  };
+const handleSaveChanges = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  try {
+    await updatePost(post);
+  } catch (error) {
+    console.error('Error updating post:', error);
+    toast.error(`Error updating post: ${error}`);
+  }
+};
+
   
 
 
@@ -134,7 +144,7 @@ const EditPage = () => {
           <div className="mb-4 p-2 flex items-center justify-center flex-col">
               <label htmlFor="title" className="flex items-center justify-center text-gray-700 text-sm font-bold mb-2">
                 Edit Media
-              <Image color='grey' width={20} height={20} alt="image-upload" />
+              <Image color='grey' width={20} height={20}  />
   
               </label>
               <input
@@ -172,12 +182,11 @@ const EditPage = () => {
               <textarea
                 name="body"
                 id="message"
-                cols="30"
-                rows="5"
+                 
                 required
                 maxLength={100}
                 value={post.body}
-                onChange={handleChange}
+                onChange={handleChangeTextarea}
                 className="px-3 py-2 border rounded-lg resize-none shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-center text-l md:text-2xl"
               ></textarea>
             </div>

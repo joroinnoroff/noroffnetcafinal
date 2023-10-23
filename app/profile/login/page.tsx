@@ -15,7 +15,7 @@ import { save } from '@/app/(auth)/(routes)/api/storage';
  
 
 const LoginPage = () => {
-const SignIn= async (event) => {
+const SignIn= async (event: { preventDefault: () => void; target: any; }) => {
   event.preventDefault();
   const form = event?.target;
   const formData = new FormData(form);

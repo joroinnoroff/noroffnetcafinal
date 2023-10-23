@@ -3,27 +3,26 @@
 import { register } from '@/app/(auth)/(routes)/api/js/templates/register';
 import { Button } from '@/components/ui/button';
 import React from 'react'
-import toast, { Toast } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 const RegisterPage = () => {
  
-  const handleRegisterFormSubmit = async (event) => {
+  const handleRegisterFormSubmit = async (event: { preventDefault: () => void; target: any; }) => {
     event.preventDefault();
     const form = event.target;
     const formData = new FormData(form);
     const profile = Object.fromEntries(formData.entries());
 
-    const action = form.action;
-    const method = form.method;
+     
 
     try {
-      await register(profile, action, method);
-      // Registration was successful, show a toast and then redirect
-      toast.success('User Registered', { appearance: 'success' });
-      window.location.href = '/'; // Redirect to /post
+      await register(profile);
+      
+      toast.success('User Registered');
+      window.location.href = '/';  
     } catch (error) {
-      // Handle registration failure, show an error toast or other UI feedback
+    
       console.error(error);
-      toast.error('Registration Failed', { appearance: 'error' });
+      toast.error('Registration Failed');
     }
   };
 
@@ -44,7 +43,7 @@ const RegisterPage = () => {
                 <input type="email" name='email' placeholder='Email' required className='border m-3 p-2 w-[300px] md:w-[400px]' pattern='^[\w\-.]+@(stud\.)?noroff\.no$' title='Email must Be Noroff affiliated'/>
                 <input type="password" name='password' placeholder='Password' required className='border m-3 p-2 w-[300px]md:w-[400px]' minLength={8}/>
                 <input type="url" name='banner' placeholder='Banner' className='border m-3 p-2 w-[300px] md:w-[400px]'/>
-                <input type="url" name='avatar' placaeholder='Avatar'  className='border m-3 p-2 w-[300px] md:w-[400px]'/>
+                <input type="url" name='avatar' placeholder='Avatar'  className='border m-3 p-2 w-[300px] md:w-[400px]'/>
               
 
 

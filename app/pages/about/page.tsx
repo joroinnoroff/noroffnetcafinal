@@ -1,16 +1,12 @@
 
 import { Button } from '@/components/ui/button'
-import { ArrowLeft } from 'lucide-react'
+
 import React from 'react'
 
 const page = () => {
   return (
     <div className='flex flex-col mt-[10rem] items-center justify-center'>
-      <div className='absolute left-10 top-32'>
-        <a href="/">
-          <ArrowLeft />
-        </a>
-      </div>
+ 
       <div className='container text-center md:w-[75%] mx-auto '>
         <h1 className='text-3xl md:text-5xl'>Om NorOff</h1>
         <p className='text-foreground-muted text-md md:text-xl '>Næringslivet skriker etter folk med digital kompetanse og kreativitet. Mange av dagens jobber vil forsvinne, og altfor få jobbsøkere har kunnskapen og ferdighetene som trengs i dag og i fremtiden. Kompetansegapet må tettes, og utdanning er nøkkelen til det.</p>

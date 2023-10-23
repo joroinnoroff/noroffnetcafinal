@@ -9,7 +9,7 @@
   import { Heart, MessageCircle, User, X } from 'lucide-react';
   import SettingsPost from './edit/components/SettingsPost';
   import FilterPost from './components/FilterPost';
-  import { Separator } from "@/components/ui/separator"
+ 
   import NoImage from '@/components/NoImage';
   import { Skeleton } from '@/components/ui/skeleton';
   import { authFetch } from '../(auth)/(routes)/api/authFetch';
@@ -20,20 +20,22 @@
 import Link from 'next/link';
 import { Url } from 'url';
   
-  
-  interface Post {
-  
-    id: String;
-    author: Author;
-    title: string;
-    body: string;
-    media: Url;
-    created: string;
-    comments: Comments[];
-    reactions: Reaction[]; 
-    tags: string[] | string;
-    
-  }
+interface Post {
+  id: number; 
+  title: string;
+  body: string;
+  tags: string[]; 
+  media: string | null;
+  reactions: Reaction[];
+  comments: Comments[];
+  created: string;
+  updated: string;
+  author: Author;
+  _count: {
+    comments: number;
+    reactions: number;
+  };
+}
   
 
 
@@ -56,9 +58,11 @@ import { Url } from 'url';
   }
   interface Reaction {
     userId: number; 
-    postId: number;
+    [postId: string]: number;
   
-  }
+  } 
+
+  
 
 
 
@@ -69,26 +73,39 @@ import { Url } from 'url';
     const [posts, setPosts] = useState<Post[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [selectedPost, setSelectedPost] = useState(null);
+  
+    const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  
+
+    const storedProfile = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem("profile") || "") : null;
+    const [user, setUser] = useState(storedProfile);
+  
    
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile") || ""));
+   
     const [filter, setFilter] = useState('Newest');
     const [showMedia, setShowMedia] = useState(false);
+    const currentDate = new Date(); 
   
-    const [likeCounts, setLikeCounts] = useState({});
+   
+
+    const [likeCounts, setLikeCounts] = useState<{ [key: string]: number }>({});
+    
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState(''); 
 
+    
   
     useEffect(() => {
+      
       async function fetchPosts() {
+        
         try {
           const fetchedPosts = await getPosts();
           setPosts(fetchedPosts);
           setLoading(false);
         } catch (error) {
           console.error('Error fetching posts:', error);
-          setError(error);
+          
           setLoading(false);
         }
       }
@@ -140,64 +157,77 @@ import { Url } from 'url';
     };
 
     const handlePageClick = (page: React.SetStateAction<number>) => {
-      if (page >= 1 && page <= totalPages) {
-        setCurrentPage(page);
+
+      const pageNumber = typeof page === 'function' ? page(currentPage) : page;
+    
+      if (pageNumber >= 1 && pageNumber <= totalPages) {
+        setCurrentPage(pageNumber);
         scrollToTop();
       }
     };
+    
 
     const handleSearchQueryChange = (query: string) => {
       setSearchQuery(query);
     };
+    
+
+
+
     const filteredPosts = posts
-    .filter((post) => (!showMedia || post.media !== ''))
-    .filter((post) => {
-      if (filter === 'Newest') {
-        return true;
-      } else if (filter === 'Oldest') {
-        return true;
-      } else if (filter === 'MostComments') {
-        return post.comments.length > 0;
-      } else if (filter === 'MostLiked') {
-        return likeCounts[post.id] > 0;
-      } else if (filter === 'Tagged') {
-        return post.tags && post.tags.length > 0;
-      } else if (filter === 'MyPosts') {
-        return post.author.name === user.name;
-      }
-  
-      return true;
-    })
-    .filter((post) => {
-      if (searchQuery) {
-        const normalizedQuery = searchQuery.toLowerCase();
-        return (
-          (post.title?.toLowerCase().includes(normalizedQuery) || false) ||
-          (post.body?.toLowerCase().includes(normalizedQuery) || false)
-        );
-      }
-  
-      return true;
-    })
-    .sort((a, b) => {
-      if (filter === 'Newest') {
-        return new Date(b.created) - new Date(a.created);
-      } else if (filter === 'Oldest') {
-        return new Date(a.created) - new Date(b.created);
-      } else if (filter === 'MostComments') {
-        return b.comments.length - a.comments.length;
-      } else if (filter === 'MostLiked') {
-        return (likeCounts[b.id] || 0) - (likeCounts[a.id] || 0);
-      } else if (filter === 'Tagged') {
-        if (a.tags && a.tags.length > 0 && (!b.tags || b.tags.length === 0)) {
-          return -1;
-        } else if ((!a.tags || a.tags.length === 0) && (b.tags && b.tags.length > 0)) {
-          return 1;
+      .filter((post) => (!showMedia || post.media !== null))
+      .filter((post) => {
+        if (filter === 'Newest') {
+          return true;
+        } else if (filter === 'Oldest') {
+          return true;
+        } else if (filter === 'MostComments') {
+          return post.comments.length > 0;
+        } else if (filter === 'MostLiked') {
+          return likeCounts[post.id.toString()] > 0;
+        } else if (filter === 'Tagged') {
+          return post.tags && post.tags.length > 0;
+        } else if (filter === 'MyPosts') {
+          return post.author.name === user.name;
         }
-      }
-      return 0;
-    });
-  
+    
+        return true;
+      })
+      .filter((post) => {
+        if (searchQuery) {
+          const normalizedQuery = searchQuery.toLowerCase();
+          return (
+            (post.title?.toLowerCase().includes(normalizedQuery) || false) ||
+            (post.body?.toLowerCase().includes(normalizedQuery) || false)
+          );
+        }
+    
+        return true;
+      })
+      .sort((a, b) => {
+        const aCreatedDate = new Date(a.created).getTime();
+        const bCreatedDate = new Date(b.created).getTime();
+      
+        if (filter === 'Newest') {
+          return bCreatedDate - aCreatedDate;
+        } else if (filter === 'Oldest') {
+          return aCreatedDate - bCreatedDate;
+        } else if (filter === 'MostComments') {
+          return b.comments.length - a.comments.length;
+        } else if (filter === 'MostLiked') {
+          return (likeCounts[b.id] || 0) - (likeCounts[a.id] || 0);
+        } else if (filter === 'Tagged') {
+          if (a.tags && a.tags.length > 0 && (!b.tags || b.tags.length === 0)) {
+            return -1;
+          } else if ((!a.tags || a.tags.length === 0) && (b.tags && b.tags.length > 0)) {
+            return 1;
+          }
+        }
+        return 0;
+      });
+      
+      
+    
 
 
 
@@ -210,26 +240,21 @@ import { Url } from 'url';
     if (loading) {
       return (
         <div className="flex flex-wrap">
-          {Array(30).fill().map((_, index) => (
-            <div key={index} className="w-[400px] md:w-1/2 px-2 mb-4">
-              <div className="flex mt-32 flex-col h-[400px] border shadow-md rounded-lg text-center">
-          
+        {Array.from({ length: 30 }, (_, index) => (
+          <div key={index} className="w-[400px] md:w-1/2 px-2 mb-4">
+            <div className="flex mt-32 flex-col h-[400px] border shadow-md rounded-lg text-center">
               <div className='flex items-center justify-center h-[250px]'>
-                  <NoImage />
-                </div>
-              
-          
-                
-                <Skeleton className="w-3/4 mx-auto h-6 p-2" />
-                
-                <div className="border my-4">
-                  <Skeleton className="w-3/4 mx-auto h-6" />
-                </div>
-  
+                <NoImage />
+              </div>
+              <Skeleton className="w-3/4 mx-auto h-6 p-2" />
+              <div className="border my-4">
+                <Skeleton className="w-3/4 mx-auto h-6" />
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
+      </div>
+      
       );
     }
 
@@ -249,9 +274,7 @@ import { Url } from 'url';
     posts.forEach((post) => {
       likeCounts[post.id] = post.reactions.length;
     });
-    const sortedPosts = [...posts].sort((a, b) => {
-      return (likeCounts[b.id] || 0) - (likeCounts[a.id] || 0);
-    });
+ 
     const handleLikePost = async (postId: any) => {
       try {
 
@@ -288,6 +311,7 @@ import { Url } from 'url';
     };
     
     
+    
     return (
       <div className="container mt-[10rem]">
       <Link href="/post/create/">
@@ -322,7 +346,9 @@ import { Url } from 'url';
           <div className="flex flex-col h-full w-full border shadow-md rounded-lg text-center">
             <div className='h-[250px]'>
               {post.media ? (
-                <img src={post.media} alt={post.title} className="w-full h-[17rem] object-cover" />
+                
+                <img src={post.media.toString()} alt={post.title} className="w-full h-[17rem] object-cover" />
+
               ) : (
                 <div className='flex items-center justify-center h-[250px]'>
                   <NoImage />
@@ -330,7 +356,7 @@ import { Url } from 'url';
               )}
             </div>
 
-            <Separator className="border my-6" />
+            <hr className="border my-6" />
             <div className='break-all w-[75%] text-center mx-auto'>
               <h2 className='text-xl lg:text-2xl'>{post.title}</h2>
               <p className='text-sm'>{post.body}</p>
@@ -354,7 +380,9 @@ import { Url } from 'url';
               <div className="absolute inset-x-0 bottom-10">
 
               <div className='h-15'>
-                {user && post.author.name === user.name ? <SettingsPost post={post} /> : null}</div>
+              {user && post.author.name === user.name ? <SettingsPost post={post as Post} /> : null}
+
+                </div>
 
                 Skrevet Av {post.author.name}
               </div>
@@ -370,14 +398,14 @@ import { Url } from 'url';
   </div>
 
   <Pagination
-    currentPage={currentPage}
-    totalPages={totalPages}
-    handlePageClick={handlePageClick}
-    handlePreviousPage={handlePreviousPage}
-    handleNextPage={handleNextPage}
-    pageRange={pageRange}
-    endIndex={endIndex}
-    posts={paginatedPosts}
+   currentPage={currentPage}
+   totalPages={totalPages}
+   handlePageClick={handlePageClick}
+   handlePreviousPage={handlePreviousPage}
+   handleNextPage={handleNextPage}
+   pageRange={pageRange}
+   endIndex={endIndex}  
+   
   />
 
 
@@ -385,7 +413,7 @@ import { Url } from 'url';
 
         <div className='animation'>
           {selectedPost && (
-            <PostModal post={selectedPost} isOpen={true} onClose={closePostModal} >
+            <PostModal post={selectedPost} isOpen={true} onClose={closePostModal} onCommentSubmit={() =>{}}>
               
               <div className='absolute left-0 top-0 p-3 dark:invert'>
                 <div className='flex flex-col'>
@@ -398,7 +426,9 @@ import { Url } from 'url';
               </div>
               <div className='flex flex-col mt-6 items-center justify-center'>
               {selectedPost.media ? (
-    <img src={selectedPost.media} alt={selectedPost.media} className="w-full md:w-[800px] h-75 object-cover rounded-sm" />
+    <img src={selectedPost.media.toString()} alt={selectedPost.title} className="w-full h-[17rem] object-cover" />
+
+    
   ) : (
     <div className="flex items-center justify-center">
       <NoImage />
@@ -426,7 +456,7 @@ import { Url } from 'url';
                     <div key={index} className="p-2 border flex flex-col-reverse rounded-sm ">
                       <p className='text-semibold text-1xl'>{comment.body}</p>
                       <div className='text-muted-foreground'>{new Date(selectedPost.created).toLocaleDateString()}</div>
-                      <Separator className="w-32"/>
+                      <hr className="w-32"/>
                       <div
                       className='flex text-sm m-3'>
                         <User />
