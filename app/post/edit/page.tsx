@@ -115,7 +115,7 @@ const EditPage = () => {
       }
     } catch (error) {
       console.error('Error deleting post:', error);
-      toast.error(`Error deleting post: ${error.message}`);
+      toast.error(`Error deleting post: ${error}`);
     }
   };
   
