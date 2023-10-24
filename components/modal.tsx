@@ -110,7 +110,7 @@ export default function Modal({ children, isOpen, onClose, post, onCommentSubmit
           <div className="dark:invert p-3 flex items-center gap-2 border rounded-md shadow-sm mt-2 w-full md:w-[600px] ">
               <input
                 type="text"
-                placeholder="Add a comment..."
+                placeholder="Skriv en Kommentar..."
                 className="p-3 md:p-8 border rounded-sm w-full"
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
@@ -119,9 +119,13 @@ export default function Modal({ children, isOpen, onClose, post, onCommentSubmit
           </div>
 
 
-            <div className="text-center mt-3 ">tags:
-          <div className="mt-3">
-            <p className="py-2 border">{post.tags}</p>
+            <div className="text-center mt-3 rounded dark:invert ">tags:
+          <div className="mt-3 ">
+          {post.tags && post.tags.length > 0 ? (
+  <p className="p-2 font-semibold text-muted-foreground text-xl border rounded-sm dark:invert">
+    {post.tags[0]}
+  </p>
+) : null}
           </div>
           </div>
         </div>

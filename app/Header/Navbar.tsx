@@ -179,7 +179,7 @@ const Navbar = () => {
                 initial="initial"
                 animate="open"
                 exit="initial"
-                className="flex flex-col h-full justify-center text-center items-center gap-4 "
+                className="flex flex-col h-full justify-center text-center items-center gap-6 mb-20 "
               >
                 {navLinks.map((link, index) => {
                   return (
@@ -224,13 +224,14 @@ const mobileLinkVars = {
 };
 const MobileNavLink = ({ title, href }: { title: string; href: string }) => {
   return (
-    <motion.div
-      variants={mobileLinkVars}
-      className="text-5xl uppercase font-semibold"
-    >
-      <Link className="" href={href}>
-        {title}
-      </Link>
-    </motion.div>
+<motion.div
+  variants={mobileLinkVars}
+  className="text-3xl m-0"
+>
+  <Link className="uppercase transform hover:underline transition-all p-5 hover:text-5xl" href={href} >
+    {title}
+  </Link>
+</motion.div>
+
   );
 };

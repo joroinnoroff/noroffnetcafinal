@@ -343,7 +343,7 @@ interface Post {
     {filteredPosts.length > 0 ? (
       filteredPosts.slice(startIndex, endIndex).map((post) => (
         <div key={post.id} className="w-full md:w-1/2 px-2 mb-4">
-          <div className="flex flex-col h-full w-full border shadow-md rounded-lg text-center">
+          <div className="flex flex-col h-[85%] md:h-full w-full border shadow-md rounded-lg text-center ">
             <div className='h-[250px]'>
               {post.media ? (
                 
@@ -357,7 +357,7 @@ interface Post {
             </div>
 
             <hr className="border my-6" />
-            <div className='break-all w-[75%] text-center mx-auto'>
+            <div className=' w-[75%] text-center mx-auto'>
               <h2 className='text-xl lg:text-2xl'>{post.title}</h2>
               <p className='text-sm'>{post.body}</p>
             </div>
@@ -367,7 +367,7 @@ interface Post {
                 <div className='flex items-end justify-center gap-2 mt-3'>
                   <div className='flex dark:invert'>
                     <button className='' onClick={() => handleLikePost(post.id)}>
-                      <Heart size={22} className="mt-3 dark:text-white " color='#000' />  <div>{likeCounts[post.id] || 0}</div>
+                      <Heart size={22} className="mt-3 dark:text-white " color='#000' />  <div className='dark:invert'>{likeCounts[post.id] || 0}</div>
                     </button>
                   </div>
                   <div className='flex flex-col items-center justify-center '>
@@ -424,9 +424,9 @@ interface Post {
               <div className="absolute top-0 right-0 h-16 w-30 text-sm p-3 text-muted-foreground">
                 {new Date(selectedPost.created).toLocaleDateString()}
               </div>
-              <div className='flex flex-col mt-6 items-center justify-center'>
+              <div className='flex flex-col mt-20 items-center justify-center'>
               {selectedPost.media ? (
-    <img src={selectedPost.media.toString()} alt={selectedPost.title} className="w-full h-[17rem] object-cover" />
+    <img src={selectedPost.media.toString()} alt={selectedPost.title} className="w-full h-[17rem] md:h-[40rem] object-cover" />
 
     
   ) : (

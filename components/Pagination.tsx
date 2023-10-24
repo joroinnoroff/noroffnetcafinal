@@ -23,7 +23,7 @@ const Pagination = ({
   endIndex: number;
 }) => {
   return (
-    <div className="flex justify-center mt-4 p-2 gap-2 items-center">
+    <div className="flex justify-center mt-4 p-2 md:gap-2 items-center ">
       {pageRange.map((page) => (
         <Button variant={"link"} key={page} onClick={() => handlePageClick(page)} className={currentPage === page ? 'bg-yellow-400 text-zinc-700' : ''}>
           {page}

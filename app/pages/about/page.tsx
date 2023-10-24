@@ -1,8 +1,10 @@
 
 import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
 import React from 'react'
-
+import NorOffLogo from '../../Images/NorOffLogo.png'
+import Image from 'next/image'
 const page = () => {
   return (
     <div className='flex flex-col mt-[10rem] items-center justify-center'>
@@ -17,10 +19,14 @@ const page = () => {
       </div>
 
       <div className='mt-5'>
-        <Button className='' size={"lg"}>Søk Her</Button>
+        <Link href="https://www.noroff.no/?gclid=CjwKCAjws9ipBhB1EiwAccEi1LfZSRSvo8itMfA-Xg9LiyaMu4cC9QUR28oDBnRbYjRjcynBKKJNpBoCGroQAvD_BwE" target="_blank"><Button className='hover:text-3xl transition-all hover:p-10 hover:scale-100' size={"lg"}>Les Mer
+        <Image src={NorOffLogo} alt="Logo" width={30} height={30} className="dark:invert" />
+        </Button></Link>
         </div>
     </div>
   )
 }
 
 export default page
+
+

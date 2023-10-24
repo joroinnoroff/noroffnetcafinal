@@ -104,6 +104,11 @@ const NewPostPage = () => {
   onChange={handleInputChange}
 />
 
+
+            <div>
+              
+            </div>
+
               </div>
               <div className="flex-row gap-3 items-end justify-center mt-10 dark:invert">
                 <div className='flex flex-row items-center justify-center gap-3 '>
