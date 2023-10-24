@@ -343,7 +343,7 @@ interface Post {
     {filteredPosts.length > 0 ? (
       filteredPosts.slice(startIndex, endIndex).map((post) => (
         <div key={post.id} className="w-full md:w-1/2 px-2 mb-4">
-          <div className="flex flex-col h-[85%] md:h-full w-full border shadow-md rounded-lg text-center ">
+          <div className="flex flex-col h-[90%] md:h-full w-full border shadow-md rounded-lg text-center ">
             <div className='h-[250px]'>
               {post.media ? (
                 
